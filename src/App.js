@@ -13,58 +13,72 @@ export default function App(){
     const alfabeto = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
     const [palavraSorteada, setPalavraSorteada] = useState('');
     const [jogoOFF, setJogoOFF] = useState(true);
-    const [chutesFeitos, setChutesFeitos] = useState(alfabeto)
-    const [erros, setErros] = useState(0)
-    const [chutesCertos, setChutesCertos] = useState([])
-    const [status, setStatus] = useState('array')
-    const forcaImgs = [forca0, forca1, forca2, forca3, forca4, forca5, forca6]
+    const [chutesFeitos, setChutesFeitos] = useState(alfabeto);
+    const [erros, setErros] = useState(0);
+    const [chutesCertos, setChutesCertos] = useState([]);
+    const [status, setStatus] = useState('array');
+    const [inputChute, setInputChute] = useState('')
+    const forcaImgs = [forca0, forca1, forca2, forca3, forca4, forca5, forca6];
     let errosTotais;
     let totalCertos;
 
     function sortearPalavra(){
-        palavras.sort(() => 0.5 - Math.random())
-        setPalavraSorteada(palavras[0])
-        setJogoOFF(false)
-        setChutesFeitos([])
-        setChutesCertos([])
-        setErros(0)
-        setStatus('array')
+        palavras.sort(() => 0.5 - Math.random());
+        setPalavraSorteada(palavras[0]);
+        setJogoOFF(false);
+        setChutesFeitos([]);
+        setChutesCertos([]);
+        setErros(0);
+        setStatus('array');
     }
 
     function chutarLetra(letra){
-        setChutesFeitos([...chutesFeitos, letra])
+        setChutesFeitos([...chutesFeitos, letra]);
         if (palavraLimpa.includes(letra)){
-            totalCertos = [...chutesCertos, letra]
-            setChutesCertos(totalCertos)
-            checaVitoria()
+            totalCertos = [...chutesCertos, letra];
+            setChutesCertos(totalCertos);
+            checaVitoria();
         } else {
             errosTotais = erros + 1
-            setErros(errosTotais)
-            checaErros()
+            setErros(errosTotais);
+            checaErros();
         }
     }
 
     function checaVitoria(){
         if (palavraLimpa.every(letra => totalCertos.includes(letra))) {
-            setJogoOFF(true)
-            setChutesFeitos([...alfabeto])
-            setStatus('ganhou')
+            setJogoOFF(true);
+            setChutesFeitos([...alfabeto]);
+            setStatus('ganhou');
         }
     }
 
     function checaErros(){
         if (errosTotais === 6) {
-            setJogoOFF(true)
-            setChutesFeitos([...alfabeto])
-            setStatus('perdeu')
-            setChutesCertos([...palavraLimpa])
+            setJogoOFF(true);
+            setChutesFeitos([...alfabeto]);
+            setStatus('perdeu');
+            setChutesCertos([...palavraLimpa]);
         }
     }
-    
 
+    function chutarPalavra(){
+        let final = palavraLimpa.join('')
+        if (inputChute === final){
+            setJogoOFF(true);
+            setChutesFeitos([...alfabeto]);
+            setChutesCertos([...palavraLimpa]);
+            setStatus('ganhou');
+        } else {
+            setJogoOFF(true);
+            setChutesFeitos([...alfabeto]);
+            setStatus('perdeu');
+            setChutesCertos([...palavraLimpa]);
+        }
+    }
 
-    const palavraLimpa = palavraSorteada.normalize("NFD").replace(/\p{Diacritic}/gu, "").split('')
-    const palavraMascarada = palavraLimpa.map((letra) => chutesCertos.includes(letra) ? letra : '_')
+    const palavraLimpa = palavraSorteada.normalize("NFD").replace(/\p{Diacritic}/gu, "").split('');
+    const palavraMascarada = palavraLimpa.map((letra) => chutesCertos.includes(letra) ? letra : '_');
     console.log(palavraLimpa)
     
     return(
@@ -87,8 +101,8 @@ export default function App(){
                     </div>
                     <div className='chute'>
                         <p>Já sei a palavra!</p>
-                        <input disabled={jogoOFF}></input>
-                        <button>Chutar!</button>
+                        <input disabled={jogoOFF} onChange={event => setInputChute(event.target.value)} value={inputChute}></input>
+                        <button disabled={jogoOFF} onClick={chutarPalavra}>Chutar!</button>
                     </div>
                 </div>
             </div>
