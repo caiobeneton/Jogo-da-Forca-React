@@ -17,7 +17,7 @@ export default function App(){
     const [erros, setErros] = useState(0);
     const [chutesCertos, setChutesCertos] = useState([]);
     const [status, setStatus] = useState('array');
-    const [inputChute, setInputChute] = useState('')
+    const [inputChute, setInputChute] = useState('');
     const forcaImgs = [forca0, forca1, forca2, forca3, forca4, forca5, forca6];
     let errosTotais;
     let totalCertos;
@@ -30,6 +30,7 @@ export default function App(){
         setChutesCertos([]);
         setErros(0);
         setStatus('array');
+        setInputChute('');
     }
 
     function chutarLetra(letra){
@@ -74,12 +75,12 @@ export default function App(){
             setChutesFeitos([...alfabeto]);
             setStatus('perdeu');
             setChutesCertos([...palavraLimpa]);
+            setErros(6);
         }
     }
 
     const palavraLimpa = palavraSorteada.normalize("NFD").replace(/\p{Diacritic}/gu, "").split('');
     const palavraMascarada = palavraLimpa.map((letra) => chutesCertos.includes(letra) ? letra : '_');
-    console.log(palavraLimpa)
     
     return(
         <>
@@ -87,22 +88,22 @@ export default function App(){
                 <div className="wrapper">
                     <div className="jogo">
                         <div className="imagem-forca">
-                            <img src={forcaImgs[erros]} alt='' ></img>
+                            <img data-identifier="game-image" src={forcaImgs[erros]} alt='' ></img>
                         </div>
                         <div className="info-jogo">
-                            <button onClick={sortearPalavra}>Escolher palavra</button>
-                            <div className={status}>{palavraMascarada.map((letra, idx) => <span key={idx}>{letra}</span>)}</div>
+                            <button data-identifier="choose-word" onClick={sortearPalavra}>Escolher palavra</button>
+                            <div data-identifier="word" className={status}>{palavraMascarada.map((letra, idx) => <span key={idx}>{letra}</span>)}</div>
                         </div>
                     </div>
                     <div className='teclado'>
-                        {alfabeto.map((a, index) => <button onClick={() => chutarLetra(a)}
+                        {alfabeto.map((a, index) => <button data-identifier="letter" onClick={() => chutarLetra(a)}
                          disabled={chutesFeitos.includes(a) ? true : false}
                           key={index}>{a}</button>)}
                     </div>
                     <div className='chute'>
                         <p>Já sei a palavra!</p>
-                        <input disabled={jogoOFF} onChange={event => setInputChute(event.target.value)} value={inputChute}></input>
-                        <button disabled={jogoOFF} onClick={chutarPalavra}>Chutar!</button>
+                        <input disabled={jogoOFF} data-identifier="type-guess" onChange={event => setInputChute(event.target.value)} value={inputChute}></input>
+                        <button disabled={jogoOFF} data-identifier="guess-button" onClick={chutarPalavra}>Chutar!</button>
                     </div>
                 </div>
             </div>
