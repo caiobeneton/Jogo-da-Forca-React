@@ -40,6 +40,22 @@
     justify-content: space-between;
 }
 
+.perdeu {
+    text-align: center;
+    font-size: 26px;
+    display: flex;
+    justify-content: space-between;
+    color: red;
+}
+
+.ganhou {
+    text-align: center;
+    font-size: 26px;
+    display: flex;
+    justify-content: space-between;
+    color: green;
+}
+
 .teclado {
     display: flex;
     justify-content: space-between;
