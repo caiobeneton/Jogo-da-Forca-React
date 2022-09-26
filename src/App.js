@@ -13,14 +13,29 @@ export default function App(){
     const alfabeto = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
     const [palavraSorteada, setPalavraSorteada] = useState('');
     const [jogoOFF, setJogoOFF] = useState(true);
+    const [chutesFeitos, setChutesFeitos] = useState(alfabeto)
+    const [erros, setErros] = useState(0)
+    const [chutesCertos, setChutesCertos] = useState([])
 
     function sortearPalavra(){
         palavras.sort(() => 0.5 - Math.random())
         setPalavraSorteada(palavras[0])
         setJogoOFF(false)
+        setChutesFeitos([])
     }
 
-    const palavraMascarada = palavraSorteada.split('').fill('_')
+    function chutarLetra(letra){
+        setChutesFeitos([...chutesFeitos, letra])
+        if (palavraLimpa.includes(letra)){
+            setChutesCertos([...chutesCertos, letra])
+        } else {
+            setErros(erros + 1)
+        }
+
+    }
+
+    const palavraLimpa = palavraSorteada.normalize("NFD").replace(/\p{Diacritic}/gu, "").split('')
+    const palavraMascarada = palavraLimpa.map((letra) => chutesCertos.includes(letra) ? letra : '_')
     
     return(
         <>
@@ -32,11 +47,13 @@ export default function App(){
                         </div>
                         <div className="info-jogo">
                             <button onClick={sortearPalavra}>Escolher palavra</button>
-                            <div className='array'>{palavraMascarada.map((letra) => <span>{letra}</span>)}</div>
+                            <div className='array'>{palavraMascarada.map((letra, idx) => <span key={idx}>{letra}</span>)}</div>
                         </div>
                     </div>
                     <div className='teclado'>
-                        {alfabeto.map((a, index) => <button disabled={jogoOFF} key={index}>{a}</button>)}
+                        {alfabeto.map((a, index) => <button onClick={() => chutarLetra(a)}
+                         disabled={chutesFeitos.includes(a) ? true : false}
+                          key={index}>{a}</button>)}
                     </div>
                     <div className='chute'>
                         <p>Já sei a palavra!</p>
